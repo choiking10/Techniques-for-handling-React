@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import Say from './Say';
+import EventPractice from './EventPractice';
 
 class App extends Component {
   render() {
     return (
-      <Say />
+      <EventPractice />
     )
   }
 }
