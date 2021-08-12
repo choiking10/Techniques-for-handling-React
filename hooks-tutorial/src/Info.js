@@ -1,30 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import useInputs from './useInputs';
 
 const Info = () => {
-  const [name, setName] = useState('');
-  const [nickName, setNickName] = useState('');
-
-  useEffect(() => {
-    console.log('마운트가 완료되었습니다.');
-  }, []);
-
-  useEffect(() => {
-    console.log('이름 변경');
-    return () => {
-      console.log('cleanup');
-    };
-  }, [name]);
-
-  useEffect(() => {
-    console.log('nickName 변경');
-  }, [nickName]);
-
+  const [state, onChange] = useInputs({ name: '', nickname: '' });
   return (
     <div>
-      <input onChange={(e) => setName(e.target.value)} value={name} />
-      <input onChange={(e) => setNickName(e.target.value)} value={nickName} />
+      <input name="name" onChange={onChange} value={state.name} />
+      <input name="nickname" onChange={onChange} value={state.nickname} />
       <h1>
-        제 이름은 {name}이고 닉네임은 {nickName} 입니다.
+        제 이름은 {state.name}이고 닉네임은 {state.nickname} 입니다.
       </h1>
     </div>
   );
