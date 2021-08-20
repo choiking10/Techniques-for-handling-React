@@ -1,0 +1,19 @@
+/* CSS Module 은 자동으로 고유해짐 */
+
+.wrapper {
+  background: black;
+  padding: 1rem;
+  color: white;
+  font-size: 2rem;
+}
+
+.inverted {
+  color:black;
+  background: white;
+  border: 1px solid black;
+}
+
+:global .something {
+  font-weight: 800;
+  color: aqua;
+}
