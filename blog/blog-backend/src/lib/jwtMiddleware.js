@@ -19,7 +19,7 @@ const jwtMiddleware = async (ctx, next) => {
         httpOnly: true,
       });
     }
-    console.log(ctx.state.user);
+    console.log(ctx);
     return next();
   } catch (e) {
     return next();

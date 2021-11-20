@@ -1,6 +1,38 @@
 import Post from '../../models/posts';
 import mongoose from 'mongoose';
 import Joi from 'joi';
+import sanitizeHtml from 'sanitize-html';
+
+const sanitizeOption = {
+  allowedTags: [
+    'h1',
+    'h2',
+    'b',
+    'i',
+    'u',
+    's',
+    'p',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'a',
+    'img',
+  ],
+  allowedAttributes: {
+    a: ['href', 'name', 'taget'],
+    img: ['src'],
+    li: ['class'],
+  },
+  allowedSchemes: ['data', 'http'],
+};
+
+const removeHtmlAndShorten = (body) => {
+  const filtered = sanitizeHtml(body, {
+    allowedTags: [],
+  });
+  return filtered.length < 200 ? filtered : `${filtered.slice(0, 200)}`;
+};
 
 export const { ObjectId } = mongoose.Types;
 
@@ -17,6 +49,7 @@ export const getPostById = async (ctx, next) => {
       return;
     }
     ctx.state.post = post;
+    console.log(post);
     return next();
   } catch (e) {
     ctx.throw(500, e);
@@ -51,7 +84,7 @@ export const write = async (ctx) => {
   const { title, body, tags } = ctx.request.body;
   const post = new Post({
     title,
-    body,
+    body: sanitizeHtml(body, sanitizeOption),
     tags,
     user: ctx.state.user,
   });
@@ -75,6 +108,7 @@ export const list = async (ctx) => {
     ...(username ? { 'user.username': username } : {}),
     ...(tag ? { tags: tag } : {}),
   };
+  console.log(ctx.query);
   try {
     const posts = await Post.find(query)
       .sort({ _id: -1 })
@@ -86,8 +120,7 @@ export const list = async (ctx) => {
     ctx.set('Last-Page', Math.ceil(postCount / 10));
     ctx.body = posts.map((post) => ({
       ...post,
-      body:
-        post.body.length < 200 ? post.body : `${post.body.slice(0, 200)}...`,
+      body: removeHtmlAndShorten(post.body),
     }));
   } catch (e) {
     ctx.throw(500, e);
@@ -114,8 +147,12 @@ export const remove = async (ctx) => {
 
 export const update = async (ctx) => {
   const { id } = ctx.params;
+  const nextData = { ...ctx.request.body };
+  if (nextData.body) {
+    nextData.body = sanitizeHtml(nextData.body, sanitizeOption);
+  }
   try {
-    const post = await Post.findByIdAndUpdate(id, ctx.request.body, {
+    const post = await Post.findByIdAndUpdate(id, nextData, {
       new: true,
     }).exec();
     if (!post) {
