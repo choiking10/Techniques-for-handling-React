@@ -17,10 +17,11 @@ const TagBoxBlock = styled.div`
 const TagForm = styled.form`
   border-radius: 4px;
   overflow: hidden;
-  display:flex;
+  display: flex;
   width: 256px;
   border: 1px solid ${palette.gray[9]};
-  input, button {
+  input,
+  button {
     outline: none;
     border: none;
     font-size: 1rem;
@@ -31,7 +32,7 @@ const TagForm = styled.form`
     min-width: 0;
   }
   button {
-    cursor: pointer:
+    cursor: pointer;
     padding-right: 1rem;
     padding-left: 1rem;
     border: none;
@@ -80,7 +81,7 @@ const TagBox = ({ tags, onTagsChange }) => {
       setLocalTags(nextTags);
       onTagsChange(nextTags);
     },
-    [localTags, onTagsChange]
+    [localTags, onTagsChange],
   );
   const insertTag = useCallback(
     (tag) => {
@@ -95,7 +96,7 @@ const TagBox = ({ tags, onTagsChange }) => {
       setLocalTags(nextTags);
       onTagsChange(nextTags);
     },
-    [localTags, onTagsChange]
+    [localTags, onTagsChange],
   );
   const onSubmit = useCallback(
     (e) => {
@@ -103,7 +104,7 @@ const TagBox = ({ tags, onTagsChange }) => {
       insertTag(input.trim());
       setInput('');
     },
-    [insertTag, input]
+    [insertTag, input],
   );
   const onChange = useCallback((e) => {
     setInput(e.target.value);

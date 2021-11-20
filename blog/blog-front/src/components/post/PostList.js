@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import palette from '../../lib/styles/palette';
 import Button from '../common/Button';
@@ -41,7 +42,9 @@ const PostItemBlock = styled.div`
 const PostItem = ({ post }) => {
   return (
     <PostItemBlock>
-      <h2>{post.title}</h2>
+      <Link to={`/@${post.user.username}/${post._id}`}>
+        <h2>{post.title}</h2>
+      </Link>
       <SubInfo
         username={post.user.username}
         publishedDate={post.publishedDate}
